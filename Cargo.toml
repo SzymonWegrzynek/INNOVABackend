@@ -1,0 +1,27 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.2.1"
+actix-cors = "0.7.0"
+actix-governor = "0.3.0"
+env_logger = "0.10"
+log = "0.4"
+actix-rt = "2.10.0"
+chrono = { version = "0.4", features = ["serde"] }
+tokio = { version = "1.39.3", features = ["full"] }
+sqlx = { version = "0.6.3", features = [
+    "postgres",
+    "runtime-tokio-rustls",
+    "runtime-actix-rustls",
+    "macros",
+] }
+serde = { version = "1.0.214", features = ["derive"] }
+config = "0.14.1"
+dotenv = "0.15"
+base64 = "0.22.1"
+jsonwebtoken = "9.3.0"
+bcrypt = "0.15.1"
+openai-api-rs = "5.2.3"
