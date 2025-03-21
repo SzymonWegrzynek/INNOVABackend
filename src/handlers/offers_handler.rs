@@ -1,8 +1,8 @@
 use actix_web::{web, HttpResponse};
 
 use crate::{
-    models::offers::{InsertOffer, Offer},
-    modules::stock_image::StockImage,
+    models::offers::{InsertOffer, Offer, OfferRes},
+    modules::{offer_res::ChangeOfferResponse, stock_image::StockImage},
     state::AppState,
 };
 
@@ -15,16 +15,13 @@ impl OffersHandler {
             .await;
 
         match result {
-            Ok(mut offers) => {
-                for offer in &mut offers {
-                    let image = StockImage {
-                        data: offer.image.clone(),
-                    };
-                    let base64_image = image.to_base64();
-                    offer.image = base64_image.into();
-                }
+            Ok(offers) => {
+                let res: Vec<OfferRes> = offers
+                    .into_iter()
+                    .map(ChangeOfferResponse::change_offer_response)
+                    .collect();
 
-                HttpResponse::Ok().json(offers)
+                HttpResponse::Ok().json(res)
             }
             Err(_) => HttpResponse::BadRequest().into(),
         }

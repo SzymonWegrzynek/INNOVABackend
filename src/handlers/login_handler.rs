@@ -1,11 +1,12 @@
 use actix_web::{
-    cookie::{time::OffsetDateTime, Cookie, SameSite},
+    cookie::{time::Duration, Cookie, SameSite},
     web, HttpResponse,
 };
-use chrono::{Duration, Utc};
 
 use crate::{
-    models::login::{CreateUserData, CreateUserResponse, SignInResponse, SignInUserData, User},
+    models::login::{
+        CreateUserData, CreateUserResponse, SignInResponse, SignInUserData, SignOutResponse, User,
+    },
     modules::{hash_password::HashPassword, jwt_token::JwtToken},
     state::AppState,
 };
@@ -69,21 +70,22 @@ impl LoginHandler {
             });
         }
 
-        let token = match JwtToken::encode_token(
-            user.user_id.try_into().unwrap(),
-            user.role.to_string(),
-            &app_state,
-        ) {
-            Ok(token) => token,
+        let token = match user.user_id.try_into() {
+            Ok(user_id) => match JwtToken::encode_token(user_id, user.role.to_string(), &app_state)
+            {
+                Ok(token) => token,
+                Err(_) => {
+                    return HttpResponse::InternalServerError().json(SignInResponse {
+                        message: "Error generating token".to_string(),
+                    });
+                }
+            },
             Err(_) => {
                 return HttpResponse::InternalServerError().json(SignInResponse {
-                    message: "Error generating token".to_string(),
+                    message: "Invalid uid format".to_string(),
                 });
             }
         };
-
-        let expire_time = Utc::now() + Duration::hours(24);
-        let expire_time = OffsetDateTime::from_unix_timestamp(expire_time.timestamp()).unwrap();
 
         HttpResponse::Ok()
             .cookie(
@@ -91,11 +93,28 @@ impl LoginHandler {
                     .http_only(true)
                     .secure(false)
                     .same_site(SameSite::Lax)
-                    .expires(expire_time)
+                    .max_age(Duration::days(1))
+                    .path("/")
                     .finish(),
             )
             .json(SignInResponse {
                 message: "Successfully logged in".to_string(),
+            })
+    }
+
+    pub async fn signout_user() -> HttpResponse {
+        HttpResponse::Ok()
+            .cookie(
+                Cookie::build("UserToken", "")
+                    .http_only(true)
+                    .secure(false)
+                    .same_site(SameSite::Lax)
+                    .max_age(Duration::days(-1))
+                    .path("/")
+                    .finish(),
+            )
+            .json(SignOutResponse {
+                message: "Successfully logged out".to_string(),
             })
     }
 }

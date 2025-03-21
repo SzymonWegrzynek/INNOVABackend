@@ -12,3 +12,8 @@ pub struct AuthenticationToken {
     pub id: usize,
     pub role: String,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct ExtractToken {
+    pub role: String,
+}

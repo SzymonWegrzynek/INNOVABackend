@@ -1,12 +1,16 @@
 use actix_web::{http::header::AUTHORIZATION, web, HttpRequest, HttpResponse};
 
-use crate::{models::auth::AuthenticationToken, modules::jwt_token::JwtToken, state::AppState};
+use crate::{
+    models::auth::{AuthenticationToken, ExtractToken},
+    modules::jwt_token::JwtToken,
+    state::AppState,
+};
 
 pub struct TokenHandler;
 
 impl TokenHandler {
     pub async fn extract_token(token: AuthenticationToken) -> HttpResponse {
-        HttpResponse::Ok().json(format!("{}", token.role))
+        HttpResponse::Ok().json(ExtractToken { role: token.role })
     }
 
     pub async fn verify_token(app_state: web::Data<AppState>, req: HttpRequest) -> HttpResponse {

@@ -16,3 +16,12 @@ pub struct Offer {
     pub link: String,
     pub image: Vec<u8>,
 }
+
+#[derive(Serialize)]
+pub struct OfferRes {
+    pub offer_id: i32,
+    pub title: String,
+    pub description: Option<String>,
+    pub link: String,
+    pub image: String,
+}

@@ -25,6 +25,11 @@ pub struct SignInResponse {
     pub message: String,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct SignOutResponse {
+    pub message: String,
+}
+
 #[derive(Type, Serialize, Deserialize, Debug)]
 #[sqlx(type_name = "user_role", rename_all = "lowercase")]
 pub enum UserRole {

@@ -30,4 +30,9 @@ pub fn auth(cfg: &mut web::ServiceConfig) {
     );
 
     cfg.route("/v1/auth/verify", web::get().to(TokenHandler::verify_token));
+
+    cfg.route(
+        "/v1/auth/signout",
+        web::post().to(LoginHandler::signout_user),
+    );
 }
