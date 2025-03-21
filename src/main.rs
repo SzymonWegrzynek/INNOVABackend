@@ -49,7 +49,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(
                 Cors::default()
-                    .allowed_origin("http://localhost:5173")
+                    .allowed_origin("https://innova-puce.vercel.app/")
                     .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
                     .allowed_headers(vec![CONTENT_TYPE, AUTHORIZATION])
                     .supports_credentials()
