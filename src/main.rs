@@ -1,7 +1,7 @@
 use actix_cors::Cors;
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::{
-    http::header::{AUTHORIZATION, CONTENT_TYPE},
+    http::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, COOKIE},
     middleware::Logger,
     web, App, HttpServer,
 };
@@ -51,7 +51,7 @@ async fn main() -> std::io::Result<()> {
                 Cors::default()
                     .allowed_origin("https://innova-puce.vercel.app")
                     .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
-                    .allowed_headers(vec![CONTENT_TYPE, AUTHORIZATION])
+                    .allowed_headers(vec![CONTENT_TYPE, AUTHORIZATION, COOKIE, ACCEPT])
                     .supports_credentials()
                     .max_age(3600),
             )
