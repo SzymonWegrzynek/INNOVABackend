@@ -92,7 +92,7 @@ impl LoginHandler {
                 Cookie::build("UserToken", token)
                     .http_only(true)
                     .secure(true)
-                    .same_site(SameSite::Lax)
+                    .same_site(SameSite::None)
                     .max_age(Duration::days(1))
                     .path("/")
                     .finish(),
@@ -108,7 +108,7 @@ impl LoginHandler {
                 Cookie::build("UserToken", "")
                     .http_only(true)
                     .secure(true)
-                    .same_site(SameSite::Lax)
+                    .same_site(SameSite::None)
                     .max_age(Duration::days(-1))
                     .path("/")
                     .finish(),
